@@ -1,5 +1,3 @@
-package banking;
-
 import banking.contract.Payable;
 import banking.payment.CreditCardPayment;
 import banking.payment.NetBankingPayment;

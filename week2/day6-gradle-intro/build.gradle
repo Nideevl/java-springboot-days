@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.Deep'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = 11
+    targetCompatibility = 11
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    runtimeOnly 'org.postgresql:postgresql:42.7.3'
+}

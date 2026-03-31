@@ -16,4 +16,9 @@ repositories {
 
 dependencies {
     runtimeOnly 'org.postgresql:postgresql:42.7.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}
+
+test {
+    useJUnitPlatform()
 }

@@ -92,7 +92,7 @@ public class LibraryService {
         }
     }
 
-    public double calculateFine(long borrowedDays){
+    public static double calculateFine(long borrowedDays){
         if(borrowedDays < 14) return 0;
         else return (borrowedDays-14)*2;
     }

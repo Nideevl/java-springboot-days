@@ -36,4 +36,24 @@ public class Book {
     public boolean isAvailable() {
         return available;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 }

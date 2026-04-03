@@ -2,6 +2,7 @@ package com.Deep.library_api;
 
 import com.Deep.library_api.model.Book;
 import com.Deep.library_api.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,14 +27,14 @@ public class BookController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/books")
-    public Book addBook(@RequestBody Book book) { return bookService.addBook(book); }
+    public Book addBook(@Valid @RequestBody Book book) { return bookService.addBook(book); }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/books/{id}")
     public void removeBook(@PathVariable Long id) { bookService.removeBook(id); }
 
     @PutMapping("/books/{id}")
-    public Book updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+    public Book updateBook(@PathVariable Long id,@Valid @RequestBody Book updatedBook) {
         return bookService.updateBook(id, updatedBook);
     }
 

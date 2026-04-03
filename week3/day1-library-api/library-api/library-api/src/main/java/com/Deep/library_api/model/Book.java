@@ -1,6 +1,8 @@
 package com.Deep.library_api.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "books")
@@ -9,8 +11,11 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String title;
+    @NotBlank
     private String author;
+    @NotBlank
     private String genre;
     private boolean available;
 

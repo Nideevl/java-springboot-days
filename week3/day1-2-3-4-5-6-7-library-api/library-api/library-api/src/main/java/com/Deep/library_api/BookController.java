@@ -3,6 +3,7 @@ package com.Deep.library_api;
 import com.Deep.library_api.model.Book;
 import com.Deep.library_api.service.BookService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,11 @@ public class BookController {
 
     @GetMapping("/books/{id}")
     public Book getBookById(@PathVariable Long id) { return bookService.getBookById(id); }
+
+    @GetMapping("/books/paged")
+    public Page<Book> getBooksPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,@RequestParam(defaultValue = "id") String sortBy) {
+        return bookService.getBooks(page, size, sortBy);
+    }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/books")

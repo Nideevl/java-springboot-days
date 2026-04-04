@@ -3,10 +3,12 @@ package com.Deep.library_api.service;
 import com.Deep.library_api.exception.BookNotFoundException;
 import com.Deep.library_api.model.Book;
 import com.Deep.library_api.repository.BookRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookService {
@@ -25,12 +27,14 @@ public class BookService {
 
     public Book addBook(Book book) { return bookRepo.save(book);}
 
-    public void removeBook(Long id) {  bookRepo.delete(bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id))); };
+    public void removeBook(Long id) {  bookRepo.delete(bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id))); }
 
     public Book updateBook(Long id, Book updatedBook) {
         bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id));
         updatedBook.setId(id);
         return bookRepo.save(updatedBook);
     }
-
+    public Page<Book> getBooks(int page, int size, String sortBy) {
+            return bookRepo.findAll(PageRequest.of(page, size, Sort.by(sortBy)));
+    }
 }

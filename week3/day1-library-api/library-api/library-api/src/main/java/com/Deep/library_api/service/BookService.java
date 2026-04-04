@@ -1,5 +1,6 @@
 package com.Deep.library_api.service;
 
+import com.Deep.library_api.exception.BookNotFoundException;
 import com.Deep.library_api.model.Book;
 import com.Deep.library_api.repository.BookRepository;
 import org.springframework.stereotype.Service;
@@ -20,14 +21,14 @@ public class BookService {
         return bookRepo.findAll();
     }
 
-    public Book getBookById(Long id) { return bookRepo.findById(id).orElseThrow(); }
+    public Book getBookById(Long id) { return bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id)); }
 
     public Book addBook(Book book) { return bookRepo.save(book);}
 
-    public void removeBook(Long id) {  bookRepo.delete(bookRepo.findById(id).orElseThrow()); };
+    public void removeBook(Long id) {  bookRepo.delete(bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id))); };
 
     public Book updateBook(Long id, Book updatedBook) {
-        bookRepo.findById(id).orElseThrow();
+        bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id));
         updatedBook.setId(id);
         return bookRepo.save(updatedBook);
     }

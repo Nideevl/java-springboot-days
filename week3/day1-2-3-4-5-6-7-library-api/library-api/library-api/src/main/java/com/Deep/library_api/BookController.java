@@ -26,6 +26,16 @@ public class BookController {
     @GetMapping("/books/{id}")
     public Book getBookById(@PathVariable Long id) { return bookService.getBookById(id); }
 
+    @GetMapping("/books/genreFilter")
+    public List<Book> getBooksByGenre(@RequestParam(defaultValue = "Adventure") String genre){
+        return bookService.getBooksByGenre(genre);
+    }
+
+    @GetMapping("/books/search")
+    public List<Book> searchBooksByTitle(@RequestParam(defaultValue = "A") String title){
+        return bookService.searchBooksByTitle(title);
+    }
+
     @GetMapping("/books/paged")
     public Page<Book> getBooksPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,@RequestParam(defaultValue = "id") String sortBy) {
         return bookService.getBooks(page, size, sortBy);

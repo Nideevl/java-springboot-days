@@ -37,4 +37,7 @@ public class BookService {
     public Page<Book> getBooks(int page, int size, String sortBy) {
             return bookRepo.findAll(PageRequest.of(page, size, Sort.by(sortBy)));
     }
+    public List<Book> getBooksByGenre(String genre) { return bookRepo.findByGenre(genre); }
+
+    public List<Book> searchBooksByTitle(String title) { return bookRepo.searchByTitle(title); }
 }

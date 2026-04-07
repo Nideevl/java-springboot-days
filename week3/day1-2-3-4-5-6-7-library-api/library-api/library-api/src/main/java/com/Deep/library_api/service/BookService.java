@@ -3,6 +3,7 @@ package com.Deep.library_api.service;
 import com.Deep.library_api.exception.BookNotFoundException;
 import com.Deep.library_api.model.Book;
 import com.Deep.library_api.repository.BookRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -40,4 +41,12 @@ public class BookService {
     public List<Book> getBooksByGenre(String genre) { return bookRepo.findByGenre(genre); }
 
     public List<Book> searchBooksByTitle(String title) { return bookRepo.searchByTitle(title); }
+
+    @Transactional
+    public void borrowedBook(Long id) {
+        Book book = bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+        book.setAvailable(false);
+        bookRepo.save(book);
+        throw new RuntimeException("Simulated failure");
+    }
 }

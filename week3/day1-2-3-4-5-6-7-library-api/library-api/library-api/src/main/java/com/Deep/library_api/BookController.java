@@ -36,6 +36,9 @@ public class BookController {
         return bookService.searchBooksByTitle(title);
     }
 
+    @GetMapping("books/borrow/{id}")
+    public void borrowBook(@Valid @PathVariable Long id) { bookService.borrowedBook(id);}
+
     @GetMapping("/books/paged")
     public Page<Book> getBooksPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,@RequestParam(defaultValue = "id") String sortBy) {
         return bookService.getBooks(page, size, sortBy);

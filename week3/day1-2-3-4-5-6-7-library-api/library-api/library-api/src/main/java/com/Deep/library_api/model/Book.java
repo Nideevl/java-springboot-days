@@ -13,10 +13,14 @@ public class Book {
 
     @NotBlank
     private String title;
-    @NotBlank
-    private String author;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "author_id")
+    private Author author;
+
     @NotBlank
     private String genre;
+
     private boolean available;
 
     public Book() {
@@ -30,7 +34,7 @@ public class Book {
         return title;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
         return author;
     }
 
@@ -46,7 +50,7 @@ public class Book {
         this.id = id;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 

@@ -41,7 +41,7 @@ public class BookController {
 
     @GetMapping("/books/paged")
     public Page<Book> getBooksPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,@RequestParam(defaultValue = "id") String sortBy) {
-        return bookServ ice.getBooks(page, size, sortBy);
+        return bookService.getBooks(page, size, sortBy);
     }
 
     @ResponseStatus(HttpStatus.CREATED)

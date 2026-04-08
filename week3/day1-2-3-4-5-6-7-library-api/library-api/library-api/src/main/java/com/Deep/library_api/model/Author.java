@@ -8,6 +8,7 @@ import java.util.List;
 @Entity
 @Table(name = "authors")
 public class Author {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,8 +16,8 @@ public class Author {
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "author")
-    List<Book> books;
+        @OneToMany(mappedBy = "author")
+        List<Book> books;
 
     public Long getId() {
         return id;

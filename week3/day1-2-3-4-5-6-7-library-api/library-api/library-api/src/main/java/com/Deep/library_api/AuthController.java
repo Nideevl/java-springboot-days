@@ -23,4 +23,10 @@ public class AuthController {
     public User register(@RequestBody User user) {
         return authService.register(user);
     }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping("/login")
+    public String login(@RequestBody User user) {
+        return authService.login(user);
+    }
 }

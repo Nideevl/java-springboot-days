@@ -26,7 +26,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
 
         return User.withUsername(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRoles().stream()
+                .authorities(user.getRoles().stream()
                         .map(Role::getPost)
                         .toArray(String[]::new) // it tells you to create an array of type string
                 ).build();

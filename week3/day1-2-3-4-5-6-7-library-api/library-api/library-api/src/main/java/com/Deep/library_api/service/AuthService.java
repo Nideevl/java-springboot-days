@@ -1,27 +1,38 @@
 package com.Deep.library_api.service;
 
+import com.Deep.library_api.exception.RoleNotFoundException;
+import com.Deep.library_api.model.Role;
 import com.Deep.library_api.model.User;
+import com.Deep.library_api.repository.RoleRepository;
 import com.Deep.library_api.repository.UserRepository;
 import com.Deep.library_api.util.JwtUtil;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AuthService {
 
     private final UserRepository userRepo;
+    private final RoleRepository roleRepo;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public AuthService(UserRepository userRepo, BCryptPasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthService(UserRepository userRepo, RoleRepository roleRepo,
+                       BCryptPasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
 
     public User register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Role userRole = roleRepo.findByPost("ROLE_USER").orElseThrow(()-> new RoleNotFoundException("Role Not Found"));
+        List<Role> roles = List.of(userRole);
+        user.setRoles(roles);
         return userRepo.save(user);
     }
 

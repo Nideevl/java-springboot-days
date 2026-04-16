@@ -36,6 +36,6 @@ public class AdminController {
         roles.add(role);
         user.setRoles(roles);
 
-        return userRepo.save(user);
+        return user;
     }
 }

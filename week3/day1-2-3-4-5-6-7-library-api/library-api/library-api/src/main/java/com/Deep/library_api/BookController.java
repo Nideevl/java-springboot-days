@@ -5,6 +5,7 @@ import com.Deep.library_api.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class BookController {
     public BookController(BookService bookService) {
         this.bookService = bookService;
     }
+
     @GetMapping("/books")
     public List<Book> getBooks() {
         return bookService.getAllBooks();
@@ -43,14 +45,17 @@ public class BookController {
         return bookService.getBooks(page, size, sortBy);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/books")
     public Book addBook(@Valid @RequestBody Book book) { return bookService.addBook(book); }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/books/{id}")
     public void removeBook(@PathVariable Long id) { bookService.removeBook(id); }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/books/{id}")
     public Book updateBook(@PathVariable Long id,@Valid @RequestBody Book updatedBook) {
         return bookService.updateBook(id, updatedBook);

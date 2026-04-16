@@ -45,8 +45,10 @@ public class BookService {
     @Transactional
     public void borrowedBook(Long id) {
         Book book = bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+        if (!book.isAvailable()) {
+            throw new RuntimeException("Book is already borrowed");
+        }
         book.setAvailable(false);
         bookRepo.save(book);
-        throw new RuntimeException("Simulated failure");
     }
 }

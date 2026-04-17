@@ -7,6 +7,7 @@ import com.Deep.library_api.service.BookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -66,5 +67,50 @@ public class BookServiceTest {
         when(bookRepo.findById(1L)).thenReturn(Optional.of(book)); // fake repo returns that unavailable book
 
         assertThrows(RuntimeException.class, () -> bookService.borrowedBook(1L)); // checks if(!available) throw fires
+    }
+
+    @Test
+    void addBook_validBook_returnsSavedBook() {
+        when(bookRepo.save(book)).thenReturn(book);
+
+        Book result = bookService.addBook(book);
+
+        assertEquals(result.getTitle() , book.getTitle());
+        verify(bookRepo).save(book);
+    }
+
+    @Test
+    void deleteBook_validId_deletesBook() {
+        when(bookRepo.findById(1L)).thenReturn(Optional.of(book));
+
+        bookService.removeBook(1L);
+
+        verify(bookRepo).delete(book);
+    }
+
+    @Test
+    void deleteBook_invalidId_throwsException() {
+        when(bookRepo.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(BookNotFoundException.class, () -> bookService.removeBook(99L));
+    }
+
+    @Test
+    void updateBook_validId_returnsUpdatedBook() {
+        when(bookRepo.findById(1L)).thenReturn(Optional.of(book));
+
+        Book updatedBook = new Book();
+        updatedBook.setId(1L);
+        updatedBook.setTitle("Clean program");
+        updatedBook.setAvailable(true);
+
+        when(bookRepo.save(updatedBook)).thenReturn(updatedBook);
+
+        ArgumentCaptor<Book> captor = ArgumentCaptor.forClass(Book.class);
+
+        bookService.updateBook(1L, updatedBook);
+
+        verify(bookRepo).save(captor.capture());
+        assertEquals(updatedBook.getTitle(), captor.getValue().getTitle());
     }
 }

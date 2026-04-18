@@ -104,13 +104,13 @@ public class BookServiceTest {
         updatedBook.setTitle("Clean program");
         updatedBook.setAvailable(true);
 
-        when(bookRepo.save(updatedBook)).thenReturn(updatedBook);
+        when(bookRepo.save(any(Book.class))).thenReturn(updatedBook);
 
         ArgumentCaptor<Book> captor = ArgumentCaptor.forClass(Book.class);
 
         bookService.updateBook(1L, updatedBook);
 
-        verify(bookRepo).save(captor.capture());
+        verify(bookRepo).save(captor.capture()); // verifies bookRepo.save ran or not and after that capture the return
         assertEquals(updatedBook.getTitle(), captor.getValue().getTitle());
     }
 

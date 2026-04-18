@@ -30,4 +30,8 @@ public class Author {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

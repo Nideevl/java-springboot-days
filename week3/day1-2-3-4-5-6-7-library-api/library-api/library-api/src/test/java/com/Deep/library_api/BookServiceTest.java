@@ -113,4 +113,16 @@ public class BookServiceTest {
         verify(bookRepo).save(captor.capture());
         assertEquals(updatedBook.getTitle(), captor.getValue().getTitle());
     }
+
+    @Test
+    void updateBook_invalid_throwsException() {
+        when(bookRepo.findById(99L)).thenReturn(Optional.empty());
+
+        Book updatedBook = new Book();
+        updatedBook.setId(99L);
+        updatedBook.setTitle("Clean program");
+        updatedBook.setAvailable(true);
+
+        assertThrows(BookNotFoundException.class, () -> bookService.updateBook(99L,updatedBook));
+    }
 }

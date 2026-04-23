@@ -60,6 +60,5 @@ public class BookController {
     public Book updateBook(@PathVariable Long id,@Valid @RequestBody Book updatedBook) {
         return bookService.updateBook(id, updatedBook);
     }
-
 }
 

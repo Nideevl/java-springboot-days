@@ -2,6 +2,18 @@ plugins {
 	java
 	id("org.springframework.boot") version "4.0.5"
 	id("io.spring.dependency-management") version "1.1.7"
+	jacoco
+}
+
+tasks.test {
+	finalizedBy("jacocoTestReport")
+}
+
+tasks.named<JacocoReport>("jacocoTestReport") {
+	dependsOn(tasks.test)
+	reports {
+		html.required = true
+	}
 }
 
 group = "com.Deep"

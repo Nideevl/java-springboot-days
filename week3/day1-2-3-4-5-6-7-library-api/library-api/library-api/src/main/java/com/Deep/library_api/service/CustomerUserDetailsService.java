@@ -2,6 +2,7 @@ package com.Deep.library_api.service;
 
 import com.Deep.library_api.model.Role;
 import com.Deep.library_api.repository.UserRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,9 +28,8 @@ public class CustomerUserDetailsService implements UserDetailsService {
         return User.withUsername(user.getUsername())
                 .password(user.getPassword())
                 .authorities(user.getRoles().stream()
-                        .map(Role::getPost)
-                        .toArray(String[]::new) // it tells you to create an array of type string
+                        .map(role -> new SimpleGrantedAuthority(role.getPost()))
+                        .toList()
                 ).build();
-
     }
 }

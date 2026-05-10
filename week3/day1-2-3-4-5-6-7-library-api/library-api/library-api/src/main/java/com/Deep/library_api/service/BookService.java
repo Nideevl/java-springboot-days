@@ -1,7 +1,9 @@
 package com.Deep.library_api.service;
 
 import com.Deep.library_api.exception.BookNotFoundException;
+import com.Deep.library_api.model.Author;
 import com.Deep.library_api.model.Book;
+import com.Deep.library_api.model.CreateBookRequest;
 import com.Deep.library_api.repository.BookRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -35,8 +37,17 @@ public class BookService {
         });
     }
 
-    public Book addBook(Book book) {
+    public Book addBook(CreateBookRequest request) {
         log.info("Adding Book to repo");
+        Author author = new Author();
+        author.setName(request.getAuthor().getName());
+
+        Book book = new Book();
+        book.setTitle(request.getTitle());
+        book.setGenre(request.getGenre());
+        book.setAuthor(author);
+        book.setAvailable(request.isAvailable());
+
         return bookRepo.save(book);
     }
 

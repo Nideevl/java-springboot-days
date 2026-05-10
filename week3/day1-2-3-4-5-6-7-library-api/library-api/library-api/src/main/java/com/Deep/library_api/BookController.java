@@ -1,6 +1,7 @@
 package com.Deep.library_api;
 
 import com.Deep.library_api.model.Book;
+import com.Deep.library_api.model.CreateBookRequest;
 import com.Deep.library_api.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -48,7 +49,7 @@ public class BookController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/books")
-    public Book addBook(@Valid @RequestBody Book book) { return bookService.addBook(book); }
+    public Book addBook(@Valid @RequestBody CreateBookRequest request) { return bookService.addBook(request); }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -24,8 +26,19 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> notValidArgument(MethodArgumentNotValidException e) {
-        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incomplete arguments or invalid arguments");
+    public ResponseEntity<Map<String, Object>> notValidArgument(MethodArgumentNotValidException e) {
+        Map<String ,Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("error", "Validation Error");
+
+        Map<String,String> fieldErrors = new HashMap<>();
+        e.getBindingResult().getFieldErrors().forEach(error ->
+                fieldErrors.put(error.getField(), error.getDefaultMessage())
+        );
+        response.put("message", "Validation failed for one or more fields");
+        response.put("details", fieldErrors);
+        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(BookNotFoundException.class)

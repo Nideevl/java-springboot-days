@@ -38,7 +38,7 @@ public class BookController {
         return bookService.searchBooksByTitle(title);
     }
 
-    @GetMapping("/books/borrow/{id}")
+    @PostMapping("/books/borrow/{id}")
     public void borrowBook(@Valid @PathVariable Long id) { bookService.borrowedBook(id);}
 
     @GetMapping("/books/paged")

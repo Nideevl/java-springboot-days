@@ -22,9 +22,11 @@ public class BookService {
 
     private static final Logger log = LoggerFactory.getLogger(BookService.class);
     private final BookRepository bookRepo;
+    private final EmailNotificationService emailNotificationService;
 
-    public BookService(BookRepository bookRepo) {
+    public BookService(BookRepository bookRepo, EmailNotificationService emailNotificationService) {
         this.bookRepo = bookRepo;
+        this.emailNotificationService = emailNotificationService;
     }
 
     @Cacheable(value = "allBooks", key = "'all'") //The inner single quotes ('all') tell SpEL: "this is a string literal, not a variable"
@@ -99,9 +101,9 @@ public class BookService {
 
     @Transactional
     public void borrowedBook(Long id) {
-        log.info("Issuing Book from library ,Id={}",id);
+        log.info("Issuing Book from library ,Id={}", id);
         Book book = bookRepo.findById(id).orElseThrow(() -> {
-            log.warn("Book that you tried to issue id={} is not present",id);
+            log.warn("Book that you tried to issue id={} is not present", id);
             return new BookNotFoundException(id);
         });
         if (!book.isAvailable()) {
@@ -110,5 +112,13 @@ public class BookService {
         }
         book.setAvailable(false);
         bookRepo.save(book);
+
+        // Fire async email notification — caller doesn't wait
+        emailNotificationService.sendBorrowConfirmationEmail(
+                "user@library.com",  // In real code, fetch user email from database or auth
+                book.getTitle(),
+                book.getId()
+        );
+        log.info("Borrow confirmation email fired asynchronously for book id={}", id);
     }
 }

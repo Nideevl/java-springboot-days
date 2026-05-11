@@ -6,6 +6,9 @@ import com.Deep.library_api.model.Book;
 import com.Deep.library_api.model.CreateBookRequest;
 import com.Deep.library_api.repository.BookRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,11 +27,14 @@ public class BookService {
         this.bookRepo = bookRepo;
     }
 
+    @Cacheable(value = "allBooks", key = "'all'") //The inner single quotes ('all') tell SpEL: "this is a string literal, not a variable"
     public List<Book> getAllBooks() {
         log.info("Fetching all books");
         return bookRepo.findAll();
     }
-
+    @Cacheable(value = "books", key = "#id")
+    //value = "books" — cache name (bucket). All getBookById() results go into a cache named "books"
+    //key = "#id" — cache key. The actual key in Redis will be "books::1", "books::2", etc. The #id is SpEL (Spring Expression Language) — it means "use the id parameter as the key"
     public Book getBookById(Long id) {
         log.info("Fetching book by id={}",id);
         return bookRepo.findById(id).orElseThrow(() -> {
@@ -37,6 +43,7 @@ public class BookService {
         });
     }
 
+    @CacheEvict(value = "allBooks", allEntries = true)
     public Book addBook(CreateBookRequest request) {
         log.info("Adding Book to repo");
         Author author = new Author();
@@ -50,7 +57,9 @@ public class BookService {
 
         return bookRepo.save(book);
     }
-
+    @CacheEvict(value = {"allBooks", "books"}, allEntries = true)
+    // allBooks — list changed, need to invalidate entire cache
+    // books — specific book deleted, evict all entries (safer)
     public void removeBook(Long id) {
         log.info("Removing book from repo ,id={}",id);
         bookRepo.delete(bookRepo.findById(id).orElseThrow(() -> {
@@ -59,6 +68,10 @@ public class BookService {
         }));
     }
 
+    @CacheEvict(value = "allBooks", allEntries = true)
+    @CachePut(value = "books", key = "#id")
+    // @CachePut — updates the specific book::id in cache
+    // @CacheEvict on allBooks — list changed, invalidate full list
     public Book updateBook(Long id, Book updatedBook) {
         log.info("Updating book details using Id");
         bookRepo.findById(id).orElseThrow(() -> {
@@ -69,6 +82,7 @@ public class BookService {
         updatedBook.setId(id);
         return bookRepo.save(updatedBook);
     }
+
     public Page<Book> getBooks(int page, int size, String sortBy) {
             log.info("Fetching Books in sections");
             return bookRepo.findAll(PageRequest.of(page, size, Sort.by(sortBy)));

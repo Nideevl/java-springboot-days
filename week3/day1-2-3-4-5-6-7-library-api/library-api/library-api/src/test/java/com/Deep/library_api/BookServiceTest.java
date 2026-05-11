@@ -1,7 +1,9 @@
 package com.Deep.library_api;
 
 import com.Deep.library_api.exception.BookNotFoundException;
+import com.Deep.library_api.model.AuthorDTO;
 import com.Deep.library_api.model.Book;
+import com.Deep.library_api.model.CreateBookRequest;
 import com.Deep.library_api.repository.BookRepository;
 import com.Deep.library_api.service.BookService;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,13 +72,31 @@ public class BookServiceTest {
     }
 
     @Test
-    void addBook_validBook_returnsSavedBook() {
-        when(bookRepo.save(book)).thenReturn(book);
+    void addBook_validRequest_returnsSavedBook() {
+        // Arrange
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setName("Robert C. Martin");
 
-        Book result = bookService.addBook(book);
+        CreateBookRequest request = new CreateBookRequest();
+        request.setTitle("Clean Code");
+        request.setGenre("Programming");
+        request.setAuthor(authorDTO);
+        request.setAvailable(true);
 
-        assertEquals(result.getTitle() , book.getTitle());
-        verify(bookRepo).save(book);
+        Book savedBook = new Book();
+        savedBook.setTitle("Clean Code");
+        savedBook.setGenre("Programming");
+        savedBook.setAvailable(true);
+
+        when(bookRepo.save(any(Book.class))).thenReturn(savedBook);
+
+        // Act
+        Book result = bookService.addBook(request);
+
+        // Assert
+        assertEquals("Clean Code", result.getTitle());
+        assertEquals("Programming", result.getGenre());
+        verify(bookRepo).save(any(Book.class));
     }
 
     @Test

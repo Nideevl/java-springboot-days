@@ -1,5 +1,6 @@
 package com.Deep.library_api.service;
 
+import com.Deep.library_api.event.BookBorrowedEvent;
 import com.Deep.library_api.exception.BookNotFoundException;
 import com.Deep.library_api.model.Author;
 import com.Deep.library_api.model.Book;
@@ -9,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,11 +24,11 @@ public class BookService {
 
     private static final Logger log = LoggerFactory.getLogger(BookService.class);
     private final BookRepository bookRepo;
-    private final EmailNotificationService emailNotificationService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    public BookService(BookRepository bookRepo, EmailNotificationService emailNotificationService) {
+    public BookService(BookRepository bookRepo, EmailNotificationService emailNotificationService, ApplicationEventPublisher applicationEventPublisher) {
         this.bookRepo = bookRepo;
-        this.emailNotificationService = emailNotificationService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Cacheable(value = "allBooks", key = "'all'") //The inner single quotes ('all') tell SpEL: "this is a string literal, not a variable"
@@ -114,11 +116,8 @@ public class BookService {
         bookRepo.save(book);
 
         // Fire async email notification — caller doesn't wait
-        emailNotificationService.sendBorrowConfirmationEmail(
-                "user@library.com",  // In real code, fetch user email from database or auth
-                book.getTitle(),
-                book.getId()
-        );
-        log.info("Borrow confirmation email fired asynchronously for book id={}", id);
+        BookBorrowedEvent event = new BookBorrowedEvent(book.getId(), book.getTitle(), "user@library.com");
+        applicationEventPublisher.publishEvent(event);
+        log.info("BookBorrowedEvent published for book id={}", id);
     }
 }

@@ -9,4 +9,5 @@ public interface WaitlistEntryRepository extends JpaRepository<WaitlistEntry, Lo
     List<WaitlistEntry> findByEquipmentIdAndStatusOrderByPositionAsc(Long equipmentId, WaitlistEntry.WaitlistStatus status);
     List<WaitlistEntry> findByDoctorIdAndStatusOrderByPositionAsc(Long doctorId, WaitlistEntry.WaitlistStatus status);
     List<WaitlistEntry> findByPatientIdAndStatusOrderByPositionAsc(Long patientId, WaitlistEntry.WaitlistStatus status);
+    List<WaitlistEntry> findByPatientIdAndStatus(Long patientId, WaitlistEntry.WaitlistStatus status);
 }

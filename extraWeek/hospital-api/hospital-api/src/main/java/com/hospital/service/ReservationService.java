@@ -9,7 +9,6 @@ import com.hospital.repository.ReservationRepository;
 import com.hospital.repository.WaitlistEntryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -101,7 +100,7 @@ public class ReservationService {
 
 
     @Transactional
-    public Reservation cancelReservation(Long reservationId) {
+    public void cancelReservation(Long reservationId) {
         Reservation reservation = getById(reservationId);
         if (reservation.getStatus() == Reservation.ReservationStatus.COMPLETED || reservation.getStatus() == Reservation.ReservationStatus.CANCELLED) {
             throw new IllegalArgumentException("Cannot cancel completed or already cancelled reservations");
@@ -113,7 +112,6 @@ public class ReservationService {
         reservation.setStatus(Reservation.ReservationStatus.CANCELLED);
         reservationRepository.save(reservation);
 
-        return reservation;
     }
 
 }

@@ -35,6 +35,9 @@ public class Appointment {
     private LocalDateTime appointmentFrom;
 
     @Column(nullable = false)
+    private LocalDateTime appointmentUntil;
+
+    @Column(nullable = false)
     private LocalDateTime getAppointmentUntil;
 
     private String reason;

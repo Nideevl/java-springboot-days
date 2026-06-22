@@ -6,7 +6,6 @@ import com.hospital.entity.Patient;
 import com.hospital.entity.WaitlistEntry;
 import com.hospital.exception.ResourceNotFoundException;
 import com.hospital.repository.AppointmentRepository;
-import com.hospital.repository.PatientRepository;
 import com.hospital.repository.WaitlistEntryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +18,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AppointmentService {
 
-    private AppointmentRepository appointmentRepository;
-    private WaitlistEntryRepository waitlistEntryRepository;
-    private PatientService patientService;
-    private DoctorService doctorService;
-    private NotificationService notificationService;
+    private final AppointmentRepository appointmentRepository;
+    private final WaitlistEntryRepository waitlistEntryRepository;
+    private final PatientService patientService;
+    private final DoctorService doctorService;
+    private final NotificationService notificationService;
 
     public Appointment getById(Long appointmentId) {
         return appointmentRepository.findById(appointmentId)

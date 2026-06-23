@@ -1,6 +1,6 @@
 package com.hospital.repository;
 
-import org.h2.engine.User;
+import com.hospital.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

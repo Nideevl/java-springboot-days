@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +20,8 @@ public class PatientService {
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found with id: "+id));
     }
 
-    public Patient getByEmail(String email) {
-        return patientRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Patient not found with email: "+email));
+    public Optional<Patient> getByEmail(String email) {
+        return patientRepository.findByEmail(email);
     }
 
     public List<Patient> getAll() {
